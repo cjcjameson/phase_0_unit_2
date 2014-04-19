@@ -78,3 +78,6 @@ p test_game.guess(-1) == :low
 
 
 # 5. Reflection 
+
+#sweet, got it working without too much trouble; just a little finagling to fit the rspec
+# now refactor and add a script portion to it.
