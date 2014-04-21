@@ -21,33 +21,51 @@
 
 # Don't forget to check on intialization for a card length
 # of exactly 16 digits
-class CreditCard
-	def initialize(number)
-		@card_digits = number.to_s.split('')
-		@card_digits.map! { |n| n.to_i }
-		raise ArgumentError, 'cards must be 16 digits long' unless @card_digits.length == 16
-	end
+# class CreditCard
+# 	def initialize(number)
+# 		@card_digits = number.to_s.split('')
+# 		@card_digits.map! { |n| n.to_i }
+# 		raise ArgumentError, 'cards must be 16 digits long' unless @card_digits.length == 16
+# 	end
 
-	def check_card
-		luhn_digits = []
-		@card_digits.each_with_index.map { |digit, index|
-			if index%2 == 0
-				luhn_digits.push(digit*2/10)
-				luhn_digits.push(digit*2%10)
-			else
-				luhn_digits.push(digit)
-			end
-		}
-		luhn_sum = luhn_digits.reduce(:+)
-		return luhn_sum % 10 == 0
-	end
-end
+# 	def check_card
+# 		luhn_digits = []
+# 		@card_digits.each_with_index.map { |digit, index|
+# 			if index%2 == 0
+# 				luhn_digits.push(digit*2/10)
+# 				luhn_digits.push(digit*2%10)
+# 			else
+# 				luhn_digits.push(digit)
+# 			end
+# 		}
+# 		luhn_sum = luhn_digits.reduce(:+)
+# 		return luhn_sum % 10 == 0
+# 	end
+# end
 
 
 
 # 4. Refactored Solution
 
+class CreditCard
+	def initialize(number)
+		@card_digits = number.to_s.split('').map! { |n| n.to_i }
+		raise ArgumentError, 'cards must be 16 digits long' unless @card_digits.length == 16
+	end
 
+	def check_card
+		luhn_sum = 0
+		@card_digits.each_with_index.map { |digit, index|
+			if index%2 == 0
+				luhn_sum += (digit * 2) / 10 #adding the tens-place 1 or 0
+				luhn_sum += (digit * 2) % 10 #adding the ones-place
+			else
+				luhn_sum += digit #the odd digits which don't need validation
+			end
+		}
+		return luhn_sum % 10 == 0
+	end
+end
 
 
 
@@ -77,3 +95,10 @@ p !invalid_card_rspec.check_card
 
 
 # 5. Reflection 
+
+# I think I came up with a pretty efficient, compact way of doing this from the get go, which got even more compact in my refactoring
+# Line 52 might even be too dense; should I break it out again?
+# I liked my naming conventions, so distinguish between the number, the digits, and the Luhn operations
+# The driver code could be a lot clearer if I used "== true" notation, even though that's redundant with boolean operators. Because here
+# I'm really testing explicitly if it equals TRUE or not, so I want to be clear. I got stuck for a little because I had ! (inverse operators)
+# in the wrong places. This would be an exception to the preference for using the ! operator rather than "== false"
