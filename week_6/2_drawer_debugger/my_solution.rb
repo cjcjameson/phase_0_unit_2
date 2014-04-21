@@ -1,7 +1,7 @@
 # U2.W6: Drawer Debugger
 
 
-# I worked on this challenge [by myself, with: ].
+# I worked on this challenge with Parjam Davoody and C.J. Jameson
 
 
 # 2. Original Code
