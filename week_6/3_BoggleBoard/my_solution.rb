@@ -9,13 +9,73 @@
 
 
 # 3. Initial Solution
+# class BoggleBoard
+# 	def initialize(board)
+# 		@board = board
+# 	end
+
+# 	def create_word(*coords)
+# 		coords.map { |coord| @board[coord.first][coord.last]}.join("")
+# 	end
+
+# 	def get_row(row)
+#     	return @board[row]
+# 	end
+
+# 	def get_col(column)
+# 		@board.map {|row| row[column]}
+# 	end
+
+# 	def get_letter(row,col)
+# 		return @board[row][col]
+# 	end
+
+# 	def get_diagonal(coord1,coord2)
+# 		row_diff = coord2[0] - coord1[0]
+# 		col_diff = coord2[1] - coord1[1]
+# 		if row_diff.abs == col_diff.abs
+# 			if row_diff >= 0
+# 				row_coords = coord1[0].upto(coord2[0]).to_a
+# 			else
+# 				row_coords = coord1[0].downto(coord2[0]).to_a
+# 			end
+# 			if col_diff >= 0
+# 				col_coords = coord1[1].upto(coord2[1]).to_a
+# 			else
+# 				col_coords = coord1[1].downto(coord2[1]).to_a
+# 			end
+# 			diag_coords = row_coords.zip(col_coords)
+# 			output = ""
+# 			(row_diff.abs + 1).times { |index|
+# 				output += get_letter(row_coords[index],col_coords[index])
+# 			}
+# 			return output
+# 		else
+# 			raise ArgumentError.new("Not a valid diagonal")
+# 		end
+# 	end
+# end
+ 
+ 
+# dice_grid = [["b", "r", "a", "e"],
+#              ["i", "o", "d", "t"],
+#              ["e", "c", "l", "r"],
+#              ["t", "a", "k", "e"]]
+ 
+# boggle_board = BoggleBoard.new(dice_grid)
+# (0..3).each {|n| p boggle_board.get_row(n).join("")}
+# (0..3).each {|n| p boggle_board.get_col(n).join("")}
+
+
+# 4. Refactored Solution
+
 class BoggleBoard
 	def initialize(board)
 		@board = board
 	end
 
 	def create_word(*coords)
-		coords.map { |coord| @board[coord.first][coord.last]}.join("")
+		coords.map { |coord| @board[coord[0]][coord[1]]}.join("") #don't need to use first & last here, let's just use normal array notation
 	end
 
 	def get_row(row)
@@ -26,7 +86,7 @@ class BoggleBoard
 		@board.map {|row| row[column]}
 	end
 
-	def get_letter(row,col)
+	def get_letter(row,col) #good that this is named "get"
 		return @board[row][col]
 	end
 
@@ -44,10 +104,10 @@ class BoggleBoard
 			else
 				col_coords = coord1[1].downto(coord2[1]).to_a
 			end
-			diag_coords = row_coords.zip(col_coords)
+			# not necessary any more. # diag_coords = row_coords.zip(col_coords)
 			output = ""
-			(row_diff.abs + 1).times { |index|
-				output += get_letter(row_coords[index],col_coords[index])
+			(row_diff.abs + 1).times { |index| #could also iterate through the row_coords with each_with_index to get the appropriate col_coord
+				output += @board[row_coords[index]][col_coords[index]] #work directly off the instance variable
 			}
 			return output
 		else
@@ -65,11 +125,7 @@ dice_grid = [["b", "r", "a", "e"],
 boggle_board = BoggleBoard.new(dice_grid)
 (0..3).each {|n| p boggle_board.get_row(n).join("")}
 (0..3).each {|n| p boggle_board.get_col(n).join("")}
-
-
-# 4. Refactored Solution
-
-
+# two words! TAKE and ROCA. Plus the gaelic BRAE, the french ETRE, and the romanian BIET
 
 
 
@@ -91,3 +147,6 @@ p boggle_board.get_diagonal([0,3], [1,2]) == "ed"
 p boggle_board.get_diagonal([3,3], [1,1]) == "elo"
 
 # 5. Reflection 
+
+# I was proud of getting get_diagonal to work, but I still think there could be a more elegant way about it. It's tough because the diagonal could be going
+# in various directions, and Ruby doesn't seem to have a nice way of creating a backwards iterator.
